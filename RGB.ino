@@ -1,19 +1,30 @@
 #include <EEPROM.h>
 
+//pin of the red led
 byte red = 11;
+//pin of the green led
 byte green = 6;
+//pin of the blue led
 byte blue = 3;
 byte mode = 0;
+//duration of effects
 int duration = 1000;
+//where to save the mode in EEPROM
+byte address = 0;
+//analog pin of the button
+byte button = 0;
 
 void setup() {
+  //initialize pins
   pinMode(red, OUTPUT);
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
-  mode = EEPROM.read(0);
+  //read mode
+  mode = EEPROM.read(address);
 }
 
 void loop() {
+  //try to switch mode
   switchMode();
   analogWrite(red, 0);
   analogWrite(green, 0);
@@ -115,12 +126,12 @@ void mode8() {
 }
 
 void switchMode() {
-  if (analogRead(0) > 1000) {
+  if (analogRead(button) > 1000) {
     mode++;
     if (mode == 10) {
       mode = 0;
     }
-    EEPROM.write(0, mode);
+    EEPROM.write(address, mode);
     analogWrite(green, 0);
     analogWrite(red, 0);
     analogWrite(blue, 0);
